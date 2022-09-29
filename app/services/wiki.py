@@ -40,8 +40,12 @@ class WikiCategoryService(object):
                     "parent_id": page_obj.wiki_category_id,
                 }
                 pages_data.append(item)
-            if pages_data and children_list == []:
-                children_list = pages_data
+            if pages_data:
+                if children_list:
+                    for i in pages_data:
+                        children_list.append(i)
+                else:
+                    children_list = pages_data
             result["children"] = children_list
             return result
 
