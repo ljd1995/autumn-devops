@@ -1,0 +1,52 @@
+[project]
+name = "autumn"
+version = "0.1.0"
+description = "autumn 是一个前端基于Vue3.2 、Vite2.9.5、 Ant-Design-Vue3.2 、TypeScript, 后端基于Python3.10 FastAPI 框架开发的一站式DevOps解决方案, 目标是为中小型公司提供现成的DevOps管理平台。"
+authors = [
+    { name = "jackless", email = "952504071@qq.com" },
+]
+dependencies = [
+    "fastapi[all]>=0.81.0",
+    "loguru>=0.6.0",
+    "aioredis>=2.0.1",
+    "APScheduler>=3.9.1",
+    "aiodocker>=0.21.0",
+    "aiopath>=0.6.10",
+    "pyyaml>=6.0",
+    "tortoise-orm>=0.19.2",
+    "httpx>=0.23.0",
+    "python-jose>=3.3.0",
+    "passlib>=1.7.4",
+    "bcrypt>=4.0.0",
+    "aerich>=0.6.3",
+    "redis>=4.3.4",
+    "pycryptodome>=3.15.0",
+    "sqlalchemy[asyncio]>=1.4.41",
+    "asyncpg>=0.26.0",
+    "ansible-runner>=2.2.1",
+    "paramiko>=2.11.0",
+    "aiomysql>=0.1.1",
+    "aiofiles>=22.1.0",
+    "rearq>=0.2.8",
+    "toml>=0.10.2",
+]
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
+
+[tool]
+[tool.pdm]
+
+[tool.aerich]
+tortoise_orm = "config.db.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '__pypackages__'
