@@ -124,3 +124,7 @@ pdm run uvicorn main:app
 - [ ] 工单管理
 - [ ] 变更与审批管理
 - [ ] 稳定性保障
+
+## License
+
+[MIT © autumn-devops-2022](./LICENSE)
