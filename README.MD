@@ -82,23 +82,41 @@ pdm run uvicorn main:app
 ## 页面展示
 
 ![host_manage](./images/host_manage.png)
+
 ![database_list](./images/database_list.png)
+
 ![web_terminal](./images/web_terminal.png)
+
 ![db_column](./images/db_column.png)
+
 ![db_query](./images/db_query.png)
+
 ![adhoc](./images/adhoc.png)
+
 ![playbook](./images/playbook.png)
+
 ![script_manage](./images/script_manage.png)
+
 ![script_history](./images/script_history.png)
+
 ![script_compare](./images/script_compare.png)
+
 ![wiki_zone](./images/wiki_zone.png)
+
 ![wiki_category_page](./images/wiki_category_page.png)
+
 ![wiki_page](./images/wiki_page.png)
+
 ![request_audit](./images/request_audit.png)
+
 ![ssh_audit](./images/ssh_audit.png)
+
 ![user_manage](./images/user_manage.png)
+
 ![role_manage](./images/role_manage.png)
+
 ![department_manage](./images/department_manage.png)
+
 ![modify_password](./images/modify_password.png)
 
 ## 功能
