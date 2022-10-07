@@ -1,6 +1,6 @@
 <div align=center>
 
-![](./logo.png)
+![](images/logo.png)
 
 ![](https://img.shields.io/github/license/ljd1995/autumn-devops)
 ![](https://img.shields.io/badge/python-3.10-blue)
