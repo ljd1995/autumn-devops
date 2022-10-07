@@ -22,7 +22,7 @@ autumn 是一个前端基于Vue3.2 、Vite2.9.5、 Ant-Design-Vue3.2 、TypeScri
 
 ## 安装
 
-**依赖管理工具**
+- 依赖管理工具
 
 项目基于[pdm](https://pdm.fming.dev/latest/)
 管理项目依赖，pdm作者是国人，也是pipenv的开发者之一，相对于pipenv、poetry这类python依赖管理工具，pdm支持virtualenv、PEP
@@ -32,13 +32,13 @@ autumn 是一个前端基于Vue3.2 、Vite2.9.5、 Ant-Design-Vue3.2 、TypeScri
 pip install pdm
 ```
 
-**安装项目依赖**
+- 安装项目依赖
 
 ```bash
 pdm install
 ```
 
-**修改数据库配置**
+- 修改数据库配置
 
 ```python
 # config/setting.py
@@ -54,14 +54,14 @@ REDIS_PORT: int = 6379
 REDIS_DB: int = 0
 ```
 
-**执行数据库迁移**
+- 执行数据库迁移
 
 ```bash
 pdm run aerich init -t config.db.TORTOISE_ORM
 pdm run aerich init-db
 ```
 
-**执行预SQL**
+- 执行预SQL
 
 ```sql
 INSERT INTO `autumn`.`t_wiki_category` (`id`, `name`, `remark`, `parent_id`, `zone_id`)
@@ -73,11 +73,33 @@ INSERT INTO `autumn`.`t_host_group` (`id`, `name`, `remark`, `parent_id`)
 VALUES (1, '根', '', NULL);
 ```
 
-**启动程序**
+- 启动程序
 
 ```bash
 pdm run uvicorn main:app
 ```
+
+## 页面展示
+
+![host_manage](./images/host_manage.png)
+![database_list](./images/database_list.png)
+![web_terminal](./images/web_terminal.png)
+![db_column](./images/db_column.png)
+![db_query](./images/db_query.png)
+![adhoc](./images/adhoc.png)
+![playbook](./images/playbook.png)
+![script_manage](./images/script_manage.png)
+![script_history](./images/script_history.png)
+![script_compare](./images/script_compare.png)
+![wiki_zone](./images/wiki_zone.png)
+![wiki_category_page](./images/wiki_category_page.png)
+![wiki_page](./images/wiki_page.png)
+![request_audit](./images/request_audit.png)
+![ssh_audit](./images/ssh_audit.png)
+![user_manage](./images/user_manage.png)
+![role_manage](./images/role_manage.png)
+![department_manage](./images/department_manage.png)
+![modify_password](./images/modify_password.png)
 
 ## 功能
 
