@@ -1,7 +1,22 @@
+<div align=center>
+
+![](./logo.png)
+
+![](https://img.shields.io/github/license/ljd1995/autumn-devops)
+![](https://img.shields.io/badge/python-3.10-blue)
+![](https://img.shields.io/github/last-commit/ljd1995/autumn-devops/master)
+</div>
+
+## 前言
+
 autumn 是一个前端基于Vue3.2 、Vite2.9.5、 Ant-Design-Vue3.2 、TypeScript, 后端基于Python3.10 FastAPI 框架开发的一站式DevOps解决方案,
 目标是为中小型公司提供现成的DevOps管理平台。
 
-## 安装前
+前端：https://github.com/ljd1995/autumn-devops-web
+
+后端：https://github.com/ljd1995/autumn-devops
+
+## 要求
 
 项目基于Python 3.10最新语法开发，请确保使用的Python版本符合要求
 
@@ -25,18 +40,18 @@ pdm install
 
 **修改数据库配置**
 
-```ini
-    # config/setting.py
+```python
+# config/setting.py
 
-    # 数据库地址
-    DB_ADDRESS: str = "mysql://root:123456@127.0.0.1:3306/autumn"
+# 数据库地址
+DB_ADDRESS: str = "mysql://root:123456@127.0.0.1:3306/autumn"
 
-    # Redis Host
-    REDIS_HOST: str = "127.0.0.1"
-    # Redis Port
-    REDIS_PORT: int = 6379
-    # Redis database
-    REDIS_DB: int = 0
+# Redis Host
+REDIS_HOST: str = "127.0.0.1"
+# Redis Port
+REDIS_PORT: int = 6379
+# Redis database
+REDIS_DB: int = 0
 ```
 
 **执行数据库迁移**
