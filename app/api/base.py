@@ -1,4 +1,3 @@
-import re
 from typing import Type, Callable, Dict
 
 from app.models.base import BaseModel
@@ -48,10 +47,7 @@ class BaseRouter(APIRouter):
         response_schema = self._response_schema
         query_schema: Type[BasePageSchema] = self._query_schema
         model = self._model
-        if self._model_path:
-            model_path = self._model_path
-        else:
-            model_path = re.sub("(?<=[a-z])[A-Z]|(?<!^)[A-Z](?=[a-z])", "-\\g<0>", model.__name__).lower()
+        model_path = self._model_path
         model_name = self._model_name
         page_query_handler = self._page_query_handler
         pydantic_model = pydantic_model_creator(model)
@@ -123,6 +119,4 @@ class BaseRouter(APIRouter):
                 return resp.ok(data=None)
 
     def __str__(self) -> str:
-        if self._tag_name:
-            return self._tag_name
-        return self._model_name
+        return self._tag_name

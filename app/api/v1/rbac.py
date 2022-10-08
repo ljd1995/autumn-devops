@@ -21,6 +21,8 @@ from fastapi import Response, Depends
 role_router = BaseRouter(
     model=Role,
     model_name="角色",
+    tag_name="RBAC",
+    model_path="rbac/role",
     request_schema=RoleReq,
     response_schema=RoleRespSchema,
     query_schema=RoleQuerySchema,
@@ -29,6 +31,8 @@ role_router = BaseRouter(
 user_router = BaseRouter(
     model=User,
     model_name="用户",
+    tag_name="RBAC",
+    model_path="rbac/user",
     request_schema=UserReqSchema,
     response_schema=UserRespSchema,
     query_schema=UserQuerySchema,
@@ -38,19 +42,21 @@ user_router = BaseRouter(
 department_router = BaseRouter(
     model=Department,
     model_name="部门",
+    tag_name="RBAC",
+    model_path="rbac/department",
     request_schema=DepartmentReq,
     response_schema=DepartmentRespSchema,
     query_schema=DepartmentQuerySchema,
 )
 
 
-@department_router.get("/department/children", response_model=DepartmentChildrenRespSchema, summary="获取部门与子部门关系列表")
+@department_router.get("/rbac/department/children", response_model=DepartmentChildrenRespSchema, summary="获取部门与子部门关系列表")
 async def get_children_data(item: DepartmentChildrenQuerySchema = Depends()) -> Response:
     data = await DepartmentService.get_children_data(item)
     return resp.ok(data=data)
 
 
-@user_router.post("/user/password", response_model=ResponseSchema, summary="修改用户密码")
+@user_router.post("/rbac/user/password", response_model=ResponseSchema, summary="修改用户密码")
 async def modify_user_password(item: UserModifyPasswordReq) -> Response:
     await UserService.modify_user_password(item)
     return resp.ok(data="修改用户密码成功")
