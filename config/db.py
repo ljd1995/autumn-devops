@@ -13,6 +13,7 @@ TORTOISE_ORM: Dict = {
                 "app.models.audit",
                 "app.models.job",
                 "app.models.wiki",
+                "app.models.cicd",
                 "aerich.models",
             ],
             "default_connection": "default",
