@@ -3,7 +3,7 @@ from typing import List
 from app.schemas.paginate import BasePageSchema
 from app.schemas.resp import ResponseSchema
 from pydantic import Field, BaseModel
-from .model_creator import HostModel, HostGroupModel, DbModel
+from .model_creator import HostModel, HostGroupModel, DbModel, ConfigCenterModel
 from ..models.enums import HostType, BelongsTo, DbType, DbSource
 
 
@@ -19,6 +19,10 @@ class DbRespSchema(ResponseSchema):
     result: DbModel | None  # type: ignore
 
 
+class ConfigCenterRespSchema(ResponseSchema):
+    result: ConfigCenterModel | None  # type: ignore
+
+
 class HostGroupChildrenRespSchema(ResponseSchema):
     result: List[HostGroupModel] | None  # type: ignore
 
@@ -30,6 +34,10 @@ class HostQuerySchema(BasePageSchema):
 
 
 class HostGroupQuerySchema(BasePageSchema):
+    ...
+
+
+class ConfigCenterQuerySchema(BasePageSchema):
     ...
 
 

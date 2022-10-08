@@ -1,5 +1,6 @@
 from app.models.audit import OperatorAuditRecord, SSHAuditRecord
-from app.models.cmdb import HostGroup, Host, Db
+from app.models.cicd import Artifact
+from app.models.cmdb import HostGroup, Host, Db, ConfigCenter
 from app.models.job import AdhocHistory, Script
 from app.models.rbac import User, Department, Role
 from app.models.wiki import WikiZone, WikiCategory, WikiPage
@@ -45,6 +46,10 @@ HostGroupReq = pydantic_model_creator(
 )
 DbModel = pydantic_model_creator(Db, name="DbModel")
 DbReq = pydantic_model_creator(Db, name="DbReq", exclude=("id", "create_time", "update_time"))
+ConfigCenterModel = pydantic_model_creator(ConfigCenter, name="ConfigCenterModel")
+ConfigCenterReq = pydantic_model_creator(
+    ConfigCenter, name="ConfigCenterReq", exclude=("id", "create_time", "update_time")
+)
 
 # AUDIT
 OperatorAuditRecordModel = pydantic_model_creator(OperatorAuditRecord, name="OperatorAuditRecordModel")
@@ -81,6 +86,8 @@ ScriptReq = pydantic_model_creator(
     name="ScriptReq",
     exclude=("id", "create_time", "update_time", "children", "script_history"),
 )
+
+
 # Wiki
 WikiZoneModel = pydantic_model_creator(WikiZone, name="WikiZoneModel")
 WikiZoneReq = pydantic_model_creator(

@@ -2,7 +2,7 @@ from typing import List
 
 from app.models import consts
 from app.models.base import BaseModel, DefaultManager
-from app.models.enums import HostType, BelongsTo, DiskType, DbType, DbSource
+from app.models.enums import HostType, BelongsTo, DiskType, DbType, DbSource, ConfigCenterType
 from tortoise import fields
 
 
@@ -143,6 +143,31 @@ class Db(BaseModel):
         manager = DefaultManager()
         table = "t_db"
         table_description = "数据库表"
+        unique_together = ["address", "port"]
+
+    class PydanticMeta:
+        exclude = ["delete_time"]
+
+    def __str__(self) -> str:
+        return self.address
+
+
+class ConfigCenter(BaseModel):
+    address = fields.CharField(description="地址", max_length=100)
+    port = fields.SmallIntField(description="端口", max_length=10)
+    type: ConfigCenterType = fields.CharEnumField(ConfigCenterType, description="类型", default=ConfigCenterType.NACOS)
+    version = fields.CharField(description="版本", max_length=30, default="")
+    token = fields.CharField(description="访问token", max_length=100, default="")
+    remark = fields.CharField(description="备注", max_length=300, default="")
+
+    @classmethod
+    def search_fields(cls) -> List[str]:
+        return ["address", "version", "remark"]
+
+    class Meta:
+        manager = DefaultManager()
+        table = "t_config_center"
+        table_description = "配置中心表"
         unique_together = ["address", "port"]
 
     class PydanticMeta:
