@@ -157,7 +157,8 @@ class ConfigCenter(BaseModel):
     port = fields.SmallIntField(description="端口", max_length=10)
     type: ConfigCenterType = fields.CharEnumField(ConfigCenterType, description="类型", default=ConfigCenterType.NACOS)
     version = fields.CharField(description="版本", max_length=30, default="")
-    token = fields.CharField(description="访问token", max_length=100, default="")
+    username = fields.CharField(description="用户名", max_length=30, default="")
+    password = fields.CharField(description="密码", max_length=60, default="")
     remark = fields.CharField(description="备注", max_length=300, default="")
 
     @classmethod
