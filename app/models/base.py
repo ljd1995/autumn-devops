@@ -28,7 +28,7 @@ class BasicModel(models.Model):
 
     @classmethod
     def _construct_orm_filter(
-            cls, field_name: str, search_value: str | int, lookup_sep: str = "__", lookup_suffix: str = "icontains"
+        cls, field_name: str, search_value: str | int, lookup_sep: str = "__", lookup_suffix: str = "icontains"
     ) -> Dict[str, str | int]:
         orm_lookup = lookup_sep.join([field_name, lookup_suffix])
         return {orm_lookup: search_value}

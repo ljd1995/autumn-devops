@@ -14,19 +14,19 @@ from tortoise.queryset import QuerySet
 
 class BaseRouter(APIRouter):
     def __init__(
-            self,
-            *,
-            request_schema: Type[ModelBase],
-            response_schema: Type[ModelBase],
-            query_schema: Type[BasePageSchema],
-            model: Type[BasicModel],
-            model_name: str,
-            page_query_handler: Callable[
-                [QuerySet[MODEL], Dict],
-                QuerySet[MODEL],
-            ] = None,
-            model_path: str | None = None,
-            tag_name: str | None = None,
+        self,
+        *,
+        request_schema: Type[ModelBase],
+        response_schema: Type[ModelBase],
+        query_schema: Type[BasePageSchema],
+        model: Type[BasicModel],
+        model_name: str,
+        page_query_handler: Callable[
+            [QuerySet[MODEL], Dict],
+            QuerySet[MODEL],
+        ] = None,
+        model_path: str | None = None,
+        tag_name: str | None = None,
     ):
         super().__init__(dependencies=[Depends(check_token)])
         self._request_schema = request_schema
@@ -39,9 +39,9 @@ class BaseRouter(APIRouter):
         self._tag_name = tag_name
 
     def load_crud_routes(
-            self,
-            only_paginate: bool = False,
-            exclude_paginate: bool = False,
+        self,
+        only_paginate: bool = False,
+        exclude_paginate: bool = False,
     ) -> None:
         request_schema: Type[ModelBase] = self._request_schema
         response_schema = self._response_schema
@@ -79,6 +79,7 @@ class BaseRouter(APIRouter):
                 return resp.ok(data=data)
 
         if not only_paginate:
+
             @self.get(
                 "/" + model_path + "/{item_id}",  # type: ignore
                 response_model=response_schema,
