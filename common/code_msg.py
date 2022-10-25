@@ -1,4 +1,5 @@
 from enum import Enum
+
 from fastapi import status
 
 
@@ -25,6 +26,14 @@ class StatusCodeEnum(Enum):
     UNAUTHORIZED_ERROR = (20008, "未登录或未验证的用户名密码", status.HTTP_401_UNAUTHORIZED)
     TOKEN_TIMEOUT_ERROR = (20009, "登录超时", status.HTTP_403_FORBIDDEN)
     SSH_ERROR = (20010, "SSH连接异常", status.HTTP_400_BAD_REQUEST)
+    CMD_EXECUTE_ERROR = (20011, "命令执行异常", status.HTTP_400_BAD_REQUEST)
+    GIT_OPERATE_ERROR = (20012, "git操作异常", status.HTTP_400_BAD_REQUEST)
+    BUILD_OPERATE_ERROR = (20012, "代码编译异常", status.HTTP_400_BAD_REQUEST)
+    DOCKER_OPERATE_ERROR = (20013, "docker操作异常", status.HTTP_400_BAD_REQUEST)
+    HELM_OPERATE_ERROR = (20014, "helm操作异常", status.HTTP_400_BAD_REQUEST)
+    SQL_EXECUTE_ERROR = (20015, "SQL执行异常", status.HTTP_400_BAD_REQUEST)
+    CONFIGURE_ERROR = (20016, "配置中心配置异常", status.HTTP_400_BAD_REQUEST)
+    WEBHOOK_ERROR = (20017, "webhook推送异常", status.HTTP_400_BAD_REQUEST)
 
     # 系统运行相关
     SERVICE_UNAVAILABLE_ERROR = (30001, "服务不可用", status.HTTP_400_BAD_REQUEST)

@@ -1,6 +1,6 @@
 from typing import Type, Callable, Dict
 
-from app.models.base import BaseModel
+from app.models.base import BasicModel
 from app.models.paginate import Pagination
 from app.schemas.paginate import BasePageSchema
 from common import resp
@@ -14,19 +14,19 @@ from tortoise.queryset import QuerySet
 
 class BaseRouter(APIRouter):
     def __init__(
-        self,
-        *,
-        request_schema: Type[ModelBase],
-        response_schema: Type[ModelBase],
-        query_schema: Type[BasePageSchema],
-        model: Type[BaseModel],
-        model_name: str,
-        page_query_handler: Callable[
-            [QuerySet[MODEL], Dict],
-            QuerySet[MODEL],
-        ] = None,
-        model_path: str | None = None,
-        tag_name: str | None = None,
+            self,
+            *,
+            request_schema: Type[ModelBase],
+            response_schema: Type[ModelBase],
+            query_schema: Type[BasePageSchema],
+            model: Type[BasicModel],
+            model_name: str,
+            page_query_handler: Callable[
+                [QuerySet[MODEL], Dict],
+                QuerySet[MODEL],
+            ] = None,
+            model_path: str | None = None,
+            tag_name: str | None = None,
     ):
         super().__init__(dependencies=[Depends(check_token)])
         self._request_schema = request_schema
@@ -39,9 +39,9 @@ class BaseRouter(APIRouter):
         self._tag_name = tag_name
 
     def load_crud_routes(
-        self,
-        only_paginate: bool = False,
-        exclude_paginate: bool = False,
+            self,
+            only_paginate: bool = False,
+            exclude_paginate: bool = False,
     ) -> None:
         request_schema: Type[ModelBase] = self._request_schema
         response_schema = self._response_schema
@@ -54,7 +54,7 @@ class BaseRouter(APIRouter):
         if not exclude_paginate:
 
             @self.get(
-                "/" + model_path,
+                "/" + model_path,  # type: ignore
                 response_model=response_schema,
                 summary=f"列出所有{model_name}",
             )
@@ -64,10 +64,10 @@ class BaseRouter(APIRouter):
                 page_size = query.pop("page_size")
                 search_value = query.pop("search", None)
 
-                queryset = model.fuzzy_search(search_value=search_value)
+                queryset = model.fuzzy_search(search_value=search_value)  # type: ignore
                 if query:
                     if page_query_handler:
-                        queryset = await page_query_handler(queryset, query)
+                        queryset = await page_query_handler(queryset, query)  # type: ignore
                     else:
                         queryset = queryset.filter(**query)
 
@@ -79,9 +79,8 @@ class BaseRouter(APIRouter):
                 return resp.ok(data=data)
 
         if not only_paginate:
-
             @self.get(
-                "/" + model_path + "/{item_id}",
+                "/" + model_path + "/{item_id}",  # type: ignore
                 response_model=response_schema,
                 summary=f"根据id获取{model_name}详情",
             )
@@ -90,13 +89,13 @@ class BaseRouter(APIRouter):
                 return resp.ok(data=data)
 
             @self.post(
-                "/" + model_path,
+                "/" + model_path,  # type: ignore
                 status_code=status.HTTP_201_CREATED,
                 response_model=response_schema,
                 summary=f"创建{model_name}",
             )
             async def create(item: request_schema, request: Request) -> Response:  # type: ignore
-                new_item = await model.create_one(item, request)
+                new_item = await model.create_one(item, request)  # type: ignore
                 data = await pydantic_model.from_tortoise_orm(new_item)
                 return resp.ok(
                     data=data,
@@ -104,19 +103,19 @@ class BaseRouter(APIRouter):
                 )
 
             @self.put(
-                "/" + model_path + "/{item_id}",
+                "/" + model_path + "/{item_id}",  # type: ignore
                 response_model=response_schema,
                 summary=f"更新{model_name}信息",
             )
             async def update(item_id: str, item: request_schema, request: Request) -> Response:  # type: ignore
-                updated_item = await model.update_one(item_id, item, request)
+                updated_item = await model.update_one(item_id, item, request)  # type: ignore
                 data = await pydantic_model.from_queryset_single(updated_item)
                 return resp.ok(data=data)
 
-            @self.delete("/" + model_path + "/{item_id}", summary=f"删除{model_name}")
+            @self.delete("/" + model_path + "/{item_id}", summary=f"删除{model_name}")  # type: ignore
             async def delete(item_id: str, request: Request) -> Response:
-                await model.delete_one(item_id, request)
+                await model.delete_one(item_id, request)  # type: ignore
                 return resp.ok(data=None)
 
     def __str__(self) -> str:
-        return self._tag_name
+        return self._tag_name if self._tag_name else ""

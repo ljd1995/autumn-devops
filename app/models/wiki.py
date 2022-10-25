@@ -1,13 +1,13 @@
-from app.models.base import BaseModel, DefaultManager
+from app.models.base import BasicModel, DefaultManager
 from core.security import get_current_username
 from fastapi import Request
-from pydantic import BaseModel as ModelBase
+from pydantic import BaseModel
 from tortoise import fields
 from tortoise.models import MODEL
 from tortoise.queryset import QuerySetSingle
 
 
-class WikiPage(BaseModel):
+class WikiPage(BasicModel):
     name = fields.CharField(description="名称", max_length=50, unique=True)
     content = fields.TextField(description="内容", default="")
     secret = fields.CharField(description="访问密钥", max_length=50, default="")
@@ -27,21 +27,21 @@ class WikiPage(BaseModel):
         exclude = ["delete_time", "wiki_category", "page_history"]
 
     @classmethod
-    async def create_one(cls, item: ModelBase, request: Request) -> MODEL:
+    async def create_one(cls, item: BaseModel, request: Request) -> MODEL:
         username = await get_current_username(request)
-        return await cls.create(**item.dict(), create_user=username)
+        return await cls.create(**item.dict(), create_user=username)  # type: ignore
 
     @classmethod
-    async def update_one(cls, _id: str, item: ModelBase, request: Request) -> QuerySetSingle[MODEL]:
+    async def update_one(cls, _id: str, item: BaseModel, request: Request) -> QuerySetSingle[MODEL]:
         username = await get_current_username(request)
         await cls.filter(id=_id).update(**item.dict(exclude_unset=True), update_user=username)
-        return cls.get(id=_id)
+        return cls.get(id=_id)  # type: ignore
 
     def __str__(self) -> str:
         return self.name
 
 
-class WikiZone(BaseModel):
+class WikiZone(BasicModel):
     name = fields.CharField(description="空间名称", max_length=50, unique=True)
     cover_image_url = fields.CharField(description="封面图片地址", max_length=200, default="")
     create_user = fields.CharField(description="创建人", max_length=30, default="")
@@ -57,15 +57,15 @@ class WikiZone(BaseModel):
         exclude = ["delete_time", "categories"]
 
     @classmethod
-    async def create_one(cls, item: ModelBase, request: Request) -> MODEL:
+    async def create_one(cls, item: BaseModel, request: Request) -> MODEL:
         username = await get_current_username(request)
-        return await cls.create(**item.dict(), create_user=username)
+        return await cls.create(**item.dict(), create_user=username)  # type: ignore
 
     def __str__(self) -> str:
         return self.name
 
 
-class WikiCategory(BaseModel):
+class WikiCategory(BasicModel):
     name = fields.CharField(description="名称", max_length=50, unique=True)
     parent: fields.ForeignKeyNullableRelation["WikiCategory"] = fields.ForeignKeyField(
         "models.WikiCategory",

@@ -2,14 +2,13 @@ from datetime import datetime
 from typing import Dict, List
 
 from app.models.enums import Status
-from pydantic import BaseModel as ModelBase
+from fastapi import Request
+from pydantic import BaseModel
 from tortoise import models, fields
 from tortoise.expressions import Q
 from tortoise.manager import Manager
-from tortoise.models import MODEL
+from tortoise.models import MODEL, Model
 from tortoise.queryset import QuerySet, QuerySetSingle
-
-from fastapi import Request
 
 
 class DefaultManager(Manager):
@@ -21,7 +20,7 @@ class DefaultManager(Manager):
         return super(DefaultManager, self).get_queryset().filter(delete_time=None).order_by("-id")
 
 
-class BaseModel(models.Model):
+class BasicModel(models.Model):
     id = fields.IntField(description="主键ID", pk=True)
     create_time = fields.DatetimeField(description="创建时间", auto_now_add=True)
     update_time = fields.DatetimeField(description="更新时间", auto_now=True)
@@ -29,7 +28,7 @@ class BaseModel(models.Model):
 
     @classmethod
     def _construct_orm_filter(
-        cls, field_name: str, search_value: str | int, lookup_sep: str = "__", lookup_suffix: str = "icontains"
+            cls, field_name: str, search_value: str | int, lookup_sep: str = "__", lookup_suffix: str = "icontains"
     ) -> Dict[str, str | int]:
         orm_lookup = lookup_sep.join([field_name, lookup_suffix])
         return {orm_lookup: search_value}
@@ -39,28 +38,31 @@ class BaseModel(models.Model):
         if search_fields is None:
             search_fields = cls.search_fields()
         if search_value:
-            orm_filter = [Q(**cls._construct_orm_filter(search_field, search_value)) for search_field in search_fields]
-            return cls.filter(Q(*orm_filter, join_type=Q.OR))
-        return cls.all()
+            orm_filter = [
+                Q(**cls._construct_orm_filter(search_field, search_value))  # type: ignore
+                for search_field in search_fields
+            ]
+            return cls.filter(Q(*orm_filter, join_type=Q.OR))  # type: ignore
+        return cls.all()  # type: ignore
 
     @classmethod
     def search_fields(cls) -> List[str]:
         return []
 
     @classmethod
-    async def create_one(cls, item: ModelBase, request: Request) -> MODEL:
+    async def create_one(cls, item: BaseModel, request: Request) -> Model:
         return await cls.create(**item.dict())
 
     @classmethod
-    async def find_by(cls, **kwargs) -> list[ModelBase]:  # type: ignore
-        return await cls.filter(**kwargs)
+    async def find_by(cls, **kwargs: str) -> List[Model]:
+        return await cls.filter(**kwargs)  # type: ignore
 
     @classmethod
-    async def find_one(cls, **kwargs) -> ModelBase | None:  # type: ignore
-        return await cls.filter(**kwargs).first()
+    async def find_one(cls, **kwargs: str) -> Model | None:
+        return await cls.filter(**kwargs).first()  # type: ignore
 
     @classmethod
-    async def update_one(cls, _id: str, item: ModelBase, request: Request) -> QuerySetSingle[MODEL]:
+    async def update_one(cls, _id: str, item: BaseModel, request: Request) -> QuerySetSingle[Model]:
         await cls.filter(id=_id).update(**item.dict(exclude_unset=True))
         return cls.get(id=_id)
 
@@ -73,7 +75,7 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class ModelWithStatus(BaseModel):
+class ModelWithStatus(BasicModel):
     status: Status = fields.IntEnumField(Status, description="状态，0：启用，1：禁用", default=Status.ENABLE)
 
     class Meta:

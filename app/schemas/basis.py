@@ -1,10 +1,20 @@
-from typing import List
+from typing import List, Dict
 
 from app.schemas.paginate import BasePageSchema
 from app.schemas.resp import ResponseSchema
 from pydantic import Field, BaseModel
-from .model_creator import HostModel, HostGroupModel, DbModel, ConfigCenterModel
-from ..models.enums import HostType, BelongsTo, DbType, DbSource
+from .model_creator import (
+    HostModel,
+    HostGroupModel,
+    DbModel,
+    ConfigCenterModel,
+    ApplicationModel,
+    EnvironmentModel,
+    EnvironmentGroupModel,
+    ApplicationBaseReq,
+    DeployConfigModel,
+)
+from ..models.enums import HostType, BelongsTo, DbType, DbSource, DeployConfigType
 
 
 class HostRespSchema(ResponseSchema):
@@ -23,6 +33,22 @@ class ConfigCenterRespSchema(ResponseSchema):
     result: ConfigCenterModel | None  # type: ignore
 
 
+class ApplicationRespSchema(ResponseSchema):
+    result: ApplicationModel | None  # type: ignore
+
+
+class ApplicationReq(ApplicationBaseReq):  # type: ignore
+    application_groups: List[Dict] | None = None
+
+
+class EnvironmentRespSchema(ResponseSchema):
+    result: EnvironmentModel | None  # type: ignore
+
+
+class EnvironmentGroupRespSchema(ResponseSchema):
+    result: EnvironmentGroupModel | None  # type: ignore
+
+
 class HostGroupChildrenRespSchema(ResponseSchema):
     result: List[HostGroupModel] | None  # type: ignore
 
@@ -39,6 +65,26 @@ class HostGroupQuerySchema(BasePageSchema):
 
 class ConfigCenterQuerySchema(BasePageSchema):
     ...
+
+
+class ApplicationQuerySchema(BasePageSchema):
+    ...
+
+
+class EnvironmentQuerySchema(BasePageSchema):
+    ...
+
+
+class EnvironmentGroupQuerySchema(BasePageSchema):
+    ...
+
+
+class DeployConfigRespSchema(ResponseSchema):
+    result: DeployConfigModel | None  # type: ignore
+
+
+class DeployConfigQuerySchema(BasePageSchema):
+    type: DeployConfigType | None
 
 
 class DbQuerySchema(BasePageSchema):

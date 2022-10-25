@@ -1,18 +1,18 @@
 from typing import List
 
-from app.models.base import DefaultManager, BaseModel
+from app.models.base import DefaultManager, BasicModel
 from core.security import get_current_username
 from fastapi import Request
-from pydantic import BaseModel as ModelBase
+from pydantic import BaseModel
 from tortoise import fields, models
 from tortoise.models import MODEL
 from tortoise.queryset import QuerySetSingle
 from utils.crypt import md5_encode
-from .cmdb import HostGroup
+from .basis import HostGroup
 from .enums import ExecCommand, ScriptType
 
 
-class AdhocHistory(BaseModel):
+class AdhocHistory(BasicModel):
     username = fields.CharField(description="用户名", max_length=20, default="")
     host_group: fields.ForeignKeyRelation["HostGroup"] = fields.ForeignKeyField(
         "models.HostGroup", db_constraint=False, related_name="adhoc_historys", description="所属主机组"
@@ -47,7 +47,7 @@ class AdhocHistory(BaseModel):
         return self.module
 
 
-class Script(BaseModel):
+class Script(BasicModel):
     name = fields.CharField(description="脚本名称", max_length=30, default="")
     content = fields.TextField(description="脚本内容", null=True, default="")
     exec_command: ExecCommand = fields.CharEnumField(ExecCommand, description="脚本执行程序", default=ExecCommand.SHELL)
@@ -70,12 +70,12 @@ class Script(BaseModel):
         return self.name
 
     @classmethod
-    async def create_one(cls, item: ModelBase, request: Request) -> MODEL:
+    async def create_one(cls, item: BaseModel, request: Request) -> MODEL:
         username = await get_current_username(request)
-        return await cls.create(**item.dict(), create_user=username)
+        return await cls.create(**item.dict(), create_user=username)  # type: ignore
 
     @classmethod
-    async def update_one(cls, _id: str, item: ModelBase, request: Request) -> QuerySetSingle[MODEL]:
+    async def update_one(cls, _id: str, item: BaseModel, request: Request) -> QuerySetSingle[MODEL]:
         username = await get_current_username(request)
         obj = await cls.get(id=_id)
         new_content_md5 = md5_encode(item.content)  # type: ignore
@@ -89,7 +89,7 @@ class Script(BaseModel):
         )
         # 更新脚本
         await cls.filter(id=_id).update(**item.dict(exclude_unset=True), update_user=username)
-        return cls.get(id=_id)
+        return cls.get(id=_id)  # type: ignore
 
     class Meta:
         manager = DefaultManager()

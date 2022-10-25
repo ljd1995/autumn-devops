@@ -1,12 +1,12 @@
 from typing import List
 
 from app.models import consts
-from app.models.base import BaseModel, DefaultManager
+from app.models.base import BasicModel, DefaultManager
 from app.models.enums import HttpMethod, SSHStatus
 from tortoise import fields
 
 
-class OperatorAuditRecord(BaseModel):
+class OperatorAuditRecord(BasicModel):
     username = fields.CharField(description="用户名", max_length=50)
     request_url = fields.CharField(description="请求URL", max_length=400)
     request_method: HttpMethod = fields.CharEnumField(HttpMethod, description="请求方法", default=HttpMethod.POST)
@@ -45,7 +45,7 @@ class OperatorAuditRecord(BaseModel):
         )
 
 
-class SSHAuditRecord(BaseModel):
+class SSHAuditRecord(BasicModel):
     username = fields.CharField(description="用户名", max_length=50)
     ssh_host = fields.CharField(description="SSH主机", max_length=20)
     ssh_user = fields.CharField(description="SSH用户名", max_length=20)

@@ -12,7 +12,7 @@ class ChildService(object):
         result = ret.dict()
         children_list = []
         for children in childrens:
-            ret = await cls._get_children_data(children, model_pydantic)
+            ret = await cls._get_children_data(children, model_pydantic)  # type: ignore
             children_list.append(ret)
         result["children"] = children_list
         return result

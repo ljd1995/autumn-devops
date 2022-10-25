@@ -47,6 +47,12 @@ class DbSource(str, Enum):
     CLOUD = "cloud"
 
 
+class ConfigCenterType(str, Enum):
+    NACOS = "nacos"
+    POLARIS = "polaris"
+    APOLLO = "apollo"
+
+
 class HttpMethod(str, Enum):
     GET = "GET"
     POST = "POST"
@@ -70,3 +76,22 @@ class ScriptType(str, Enum):
 class SSHStatus(IntEnum):
     ONLINE = 0
     OFFLINE = 1
+
+
+class DeployConfigType(str, Enum):
+    DOCKER_REGISTRY = "docker_registry"
+    K8S = "k8s"
+    GIT = "git"
+
+
+class ApplicationLanguage(str, Enum):
+    PYTHON = "python"
+    GO = "go"
+    JAVA = "java"
+    C = "c"
+    CPLUSPLUS = "c++"
+    LUA = "lua"
+    JAVASCRIPT = "js"
+    TYPESCRIPT = "ts"
+    CSHARP = "c#"
+    PHP = "php"

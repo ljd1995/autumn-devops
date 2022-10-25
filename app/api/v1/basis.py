@@ -1,6 +1,6 @@
 from app.api.base import BaseRouter
-from app.models.cmdb import Host, HostGroup, Db, ConfigCenter
-from app.schemas.cmdb import (
+from app.models.basis import Host, HostGroup, Db, ConfigCenter, Application, Environment, EnvironmentGroup, DeployConfig
+from app.schemas.basis import (
     HostRespSchema,
     HostGroupRespSchema,
     HostQuerySchema,
@@ -15,10 +15,27 @@ from app.schemas.cmdb import (
     DbExecuteSqlReq,
     ConfigCenterRespSchema,
     ConfigCenterQuerySchema,
+    ApplicationRespSchema,
+    ApplicationQuerySchema,
+    EnvironmentGroupRespSchema,
+    EnvironmentGroupQuerySchema,
+    EnvironmentQuerySchema,
+    EnvironmentRespSchema,
+    ApplicationReq,
+    DeployConfigRespSchema,
+    DeployConfigQuerySchema,
 )
-from app.schemas.model_creator import HostReq, HostGroupReq, DbReq, ConfigCenterReq
+from app.schemas.model_creator import (
+    HostReq,
+    HostGroupReq,
+    DbReq,
+    ConfigCenterReq,
+    EnvironmentGroupReq,
+    EnvironmentReq,
+    DeployConfigReq,
+)
 from app.schemas.resp import ResponseSchema
-from app.services.cmdb import HostGroupService, HostService, DbService
+from app.services.basis import HostGroupService, HostService, DbService
 from common import resp
 from fastapi import Response
 
@@ -61,6 +78,44 @@ config_center_router = BaseRouter(
     request_schema=ConfigCenterReq,
     response_schema=ConfigCenterRespSchema,
     query_schema=ConfigCenterQuerySchema,
+)
+
+application_router = BaseRouter(
+    model=Application,
+    model_name="应用",
+    tag_name="应用配置",
+    model_path="app/application",
+    request_schema=ApplicationReq,
+    response_schema=ApplicationRespSchema,
+    query_schema=ApplicationQuerySchema,
+)
+environment_router = BaseRouter(
+    model=Environment,
+    model_name="环境",
+    tag_name="应用配置",
+    model_path="app/environment",
+    request_schema=EnvironmentReq,
+    response_schema=EnvironmentRespSchema,
+    query_schema=EnvironmentQuerySchema,
+)
+environment_group_router = BaseRouter(
+    model=EnvironmentGroup,
+    model_name="环境组",
+    tag_name="应用配置",
+    model_path="app/env-group",
+    request_schema=EnvironmentGroupReq,
+    response_schema=EnvironmentGroupRespSchema,
+    query_schema=EnvironmentGroupQuerySchema,
+)
+
+deploy_config_router = BaseRouter(
+    model=DeployConfig,
+    model_name="部署配置",
+    tag_name="CMDB",
+    request_schema=DeployConfigReq,
+    response_schema=DeployConfigRespSchema,
+    query_schema=DeployConfigQuerySchema,
+    model_path="cmdb/deploy-config",
 )
 
 
@@ -116,3 +171,7 @@ host_router.load_crud_routes()
 host_group_router.load_crud_routes()
 db_router.load_crud_routes()
 config_center_router.load_crud_routes()
+application_router.load_crud_routes()
+environment_router.load_crud_routes()
+environment_group_router.load_crud_routes()
+deploy_config_router.load_crud_routes()

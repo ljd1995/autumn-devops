@@ -3,7 +3,8 @@ from collections import defaultdict
 from typing import List, Dict
 
 import aiofiles  # type: ignore
-from app.models.cmdb import HostGroup, Host
+from aiofiles import os as async_os
+from app.models.basis import HostGroup, Host
 from app.models.enums import ScriptType
 from app.models.job import AdhocHistory, Script, ScriptHistory
 from app.schemas.job import ExecModuleReq, ExecTaskReq
@@ -12,7 +13,6 @@ from app.services.children import ChildService
 from tortoise.contrib.pydantic import pydantic_model_creator
 from utils.crypt import AESCipher, md5_encode_with_salt
 from utils.executor import AnsibleExecutor
-from aiofiles import os as async_os
 
 
 class JobService(object):

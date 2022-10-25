@@ -61,5 +61,8 @@ class Settings(BaseSettings):
     # SFTP上传的目的目录
     SFTP_UPLOAD_DIR: str = "/tmp"
 
+    # 代码克隆存储目录
+    GIT_DEST_DIR: str = "/opt/git_file"
+
 
 settings = Settings()

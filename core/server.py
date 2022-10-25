@@ -1,21 +1,23 @@
 from glob import glob
 from importlib import import_module
-from inspect import getmembers
+from inspect import getmembers, isclass
 from pathlib import Path
 from typing import List
 
+from app.models.cicd import CICDPlugin as CICDPluginModel
 from common.error_handler import error_handlers
 from common.middlewares import AuditMiddleware
 from common.redis import redis_client
 from common.schedule import schedule
-from tasks import rearq_obj
 from config import db
 from config.setting import settings
 from fastapi import FastAPI, APIRouter
 from rearq.server.app import app as rearq_app
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
+from tasks import rearq_obj
 from tortoise import Tortoise, connections
+from utils.abstract import CICDPlugin
 
 
 def create_app() -> FastAPI:
@@ -76,6 +78,32 @@ def register_router(app: FastAPI) -> None:
     app.mount(f"{settings.API_V1_STR}/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
+async def register_cicd_plugins(app: FastAPI) -> None:
+    """
+    注册CICD插件
+    :param app:
+    :return:
+    """
+    plugins: List = []
+    module = import_module("utils.plugin", app.__module__)
+    for _, member in getmembers(module):
+        if isclass(member) and issubclass(member, CICDPlugin):
+            plugins.append(member)
+    for plugin in plugins:
+        try:
+            p = plugin()
+            plugin_obj_qs = await CICDPluginModel.filter(name=p.name)
+            if not plugin_obj_qs:
+                await CICDPluginModel.create(name=p.name, remark=p.remark, default_parameters=p.parameters)
+            else:
+                plugin_obj = plugin_obj_qs[0]
+                plugin_obj.remark = p.remark
+                plugin_obj.default_parameters = p.parameters
+                await plugin_obj.save()
+        except Exception:
+            print("err", plugin)
+
+
 def register_cors(app: FastAPI) -> None:
     """
     支持跨域
@@ -122,6 +150,9 @@ def register_event(app: FastAPI) -> None:
 
         # 初始化 apscheduler
         schedule.init_scheduler()
+
+        # 注册CICD插件
+        await register_cicd_plugins(app)
 
     @app.on_event("shutdown")
     async def shutdown_connect() -> None:

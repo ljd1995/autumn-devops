@@ -30,3 +30,35 @@ class AuthenticationFailedException(APIException):
 
 class SSHOperatorException(APIException):
     status_code_enum = StatusCodeEnum.SSH_ERROR
+
+
+class CmdExecuteException(APIException):
+    status_code_enum = StatusCodeEnum.CMD_EXECUTE_ERROR
+
+
+class GitOperateException(APIException):
+    status_code_enum = StatusCodeEnum.GIT_OPERATE_ERROR
+
+
+class BuildOperateException(APIException):
+    status_code_enum = StatusCodeEnum.BUILD_OPERATE_ERROR
+
+
+class DockerOperateException(APIException):
+    status_code_enum = StatusCodeEnum.DOCKER_OPERATE_ERROR
+
+
+class HelmOperateException(APIException):
+    status_code_enum = StatusCodeEnum.HELM_OPERATE_ERROR
+
+
+class SqlExecuteException(APIException):
+    status_code_enum = StatusCodeEnum.SQL_EXECUTE_ERROR
+
+
+class ConfigureException(APIException):
+    status_code_enum = StatusCodeEnum.CONFIGURE_ERROR
+
+
+class WebhookException(APIException):
+    status_code_enum = StatusCodeEnum.WEBHOOK_ERROR

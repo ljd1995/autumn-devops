@@ -45,7 +45,7 @@ async def get_current_user(user_id: str = Depends(check_token)) -> User:
     :param user_id:
     :return: User
     """
-    user = await User.find_by_id(_id=user_id)
+    user: User = await User.find_by_id(_id=user_id)
     if user is None:
         raise UnauthorisedException("Access token is invalid")
     return user
@@ -90,7 +90,7 @@ async def get_current_username(request: Request) -> str:
             payload = jwt.decode(auth_token.credentials, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
 
             user_id: str = payload.get("sub")
-            user = await User.find_by_id(_id=user_id)
+            user: User = await User.find_by_id(_id=user_id)
             username = user.username
         except Exception:
             raise UnauthorisedException("Access token is invalid")
@@ -107,7 +107,7 @@ async def check_token_from_query(
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
 
         user_id: str = payload.get("sub")
-        user = await User.find_by_id(_id=user_id)
+        user: User = await User.find_by_id(_id=user_id)
         username = user.username
         return username
     except Exception:

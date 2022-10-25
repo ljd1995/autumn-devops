@@ -2,12 +2,12 @@ from typing import List
 
 from app.models.base import ModelWithStatus, DefaultManager
 from common.exceptions import APIException
+from fastapi import Request
 from passlib.context import CryptContext
-from pydantic import BaseModel as ModelBase
+from pydantic import BaseModel
 from tortoise import fields
 from tortoise.models import MODEL
 from tortoise.queryset import QuerySetSingle
-from fastapi import Request
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -50,7 +50,7 @@ class User(ModelWithStatus):
 
     @classmethod
     async def find_by_id(cls, _id: int | str) -> MODEL:
-        return await cls.filter(pk=_id).first()
+        return await cls.filter(pk=_id).first()  # type: ignore
 
     @staticmethod
     def generate_hash(password: str) -> str:
@@ -61,20 +61,20 @@ class User(ModelWithStatus):
         return pwd_context.verify(password, hashed_password)
 
     @classmethod
-    async def create_one(cls, item: ModelBase, request: Request) -> MODEL:
+    async def create_one(cls, item: BaseModel, request: Request) -> MODEL:
         if hasattr(item, "password"):
             if item.password:  # type: ignore
                 item.password = cls.generate_hash(item.password)  # type: ignore
             else:
                 raise APIException("password can not be empty")
-        return await cls.create(**item.dict())
+        return await cls.create(**item.dict())  # type: ignore
 
     @classmethod
-    async def update_one(cls, _id: str, item: ModelBase, request: Request) -> QuerySetSingle[MODEL]:
+    async def update_one(cls, _id: str, item: BaseModel, request: Request) -> QuerySetSingle[MODEL]:
         if hasattr(item, "password") and item.password is not None:  # type: ignore
             item.password = cls.generate_hash(item.password)  # type: ignore
         await cls.filter(id=_id).update(**item.dict(exclude_unset=True))
-        return cls.get(id=_id)
+        return cls.get(id=_id)  # type: ignore
 
     @classmethod
     def search_fields(cls) -> List[str]:

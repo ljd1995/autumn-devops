@@ -1,6 +1,6 @@
 from app.models.audit import OperatorAuditRecord, SSHAuditRecord
-from app.models.cicd import Artifact
-from app.models.cmdb import HostGroup, Host, Db, ConfigCenter
+from app.models.basis import HostGroup, Host, Db, ConfigCenter, Application, Environment, EnvironmentGroup, DeployConfig
+from app.models.cicd import Artifact, CICDPlugin, PipelinePlugin
 from app.models.job import AdhocHistory, Script
 from app.models.rbac import User, Department, Role
 from app.models.wiki import WikiZone, WikiCategory, WikiPage
@@ -9,7 +9,7 @@ from tortoise.contrib.pydantic import pydantic_model_creator
 
 # Initialize model relationships
 Tortoise.init_models(
-    ["app.models.rbac", "app.models.cmdb", "app.models.audit", "app.models.job", "app.models.wiki"], "models"
+    ["app.models.rbac", "app.models.basis", "app.models.audit", "app.models.job", "app.models.wiki"], "models"
 )
 
 # RBAC
@@ -20,7 +20,7 @@ UserReq = pydantic_model_creator(User, name="UserReq", exclude=("id", "create_ti
 DepartmentReq = pydantic_model_creator(Department, name="DepartmentReq", exclude=("id", "create_time", "update_time"))
 RoleReq = pydantic_model_creator(Role, name="RoleReq", exclude=("id", "create_time", "update_time"))
 
-# CMDB
+# BASIS
 HostModel = pydantic_model_creator(Host, name="HostModel")
 HostGroupModel = pydantic_model_creator(HostGroup, name="HostGroupModel", computed=("key", "title"))
 HostReq = pydantic_model_creator(
@@ -49,6 +49,29 @@ DbReq = pydantic_model_creator(Db, name="DbReq", exclude=("id", "create_time", "
 ConfigCenterModel = pydantic_model_creator(ConfigCenter, name="ConfigCenterModel")
 ConfigCenterReq = pydantic_model_creator(
     ConfigCenter, name="ConfigCenterReq", exclude=("id", "create_time", "update_time")
+)
+ApplicationModel = pydantic_model_creator(Application, name="ApplicationModel")
+ApplicationBaseReq = pydantic_model_creator(
+    Application,
+    name="ApplicationBaseReq",
+    exclude=("id", "create_time", "update_time", "create_user", "update_user", "application_groups"),
+)
+EnvironmentModel = pydantic_model_creator(Environment, name="EnvironmentModel")
+EnvironmentReq = pydantic_model_creator(
+    Environment, name="EnvironmentReq", exclude=("id", "create_time", "update_time")
+)
+EnvironmentGroupModel = pydantic_model_creator(EnvironmentGroup, name="EnvironmentGroupModel")
+
+EnvironmentGroupReq = pydantic_model_creator(
+    EnvironmentGroup,
+    name="EnvironmentGroupReq",
+    exclude=("id", "create_time", "update_time", "env_name", "db_name", "config_name"),
+)
+DeployConfigModel = pydantic_model_creator(DeployConfig, name="DeployConfigModel")
+DeployConfigReq = pydantic_model_creator(
+    DeployConfig,
+    name="DeployConfigReq",
+    exclude=("id", "create_time", "update_time"),
 )
 
 # AUDIT
@@ -87,7 +110,6 @@ ScriptReq = pydantic_model_creator(
     exclude=("id", "create_time", "update_time", "children", "script_history"),
 )
 
-
 # Wiki
 WikiZoneModel = pydantic_model_creator(WikiZone, name="WikiZoneModel")
 WikiZoneReq = pydantic_model_creator(
@@ -110,4 +132,23 @@ WikiPageReq = pydantic_model_creator(
     WikiPage,
     name="WikiPageReq",
     exclude=("id", "create_time", "update_time", "create_user", "update_user"),
+)
+
+# CICD
+ArtifactModel = pydantic_model_creator(Artifact, name="ArtifactModel")
+ArtifactBaseReq = pydantic_model_creator(
+    Artifact,
+    name="ArtifactReq",
+    exclude=("id", "create_time", "update_time", "create_user", "update_user"),
+)
+CICDPluginModel = pydantic_model_creator(CICDPlugin, name="CICDPluginModel")
+CICDPluginReq = pydantic_model_creator(
+    CICDPlugin,
+    name="CICDPluginReq",
+    exclude=("id", "create_time", "update_time"),
+)
+PipelinePluginReq = pydantic_model_creator(
+    PipelinePlugin,
+    name="PipelinePluginReq",
+    exclude=("id", "create_time", "update_time"),
 )

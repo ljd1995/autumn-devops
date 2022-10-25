@@ -3,12 +3,13 @@ import re
 import threading
 from typing import List
 
-import aiofiles  # type: ignore
 import orjson
+
+import aiofiles  # type: ignore
 import paramiko  # type: ignore
 from aiofiles import os as async_os
 from app.models.audit import SSHAuditRecord
-from app.models.cmdb import Host
+from app.models.basis import Host
 from app.models.enums import SSHStatus
 from common.exceptions import SSHOperatorException
 from common.log import Log

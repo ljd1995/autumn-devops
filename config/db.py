@@ -9,7 +9,7 @@ TORTOISE_ORM: Dict = {
         "models": {
             "models": [
                 "app.models.rbac",
-                "app.models.cmdb",
+                "app.models.basis",
                 "app.models.audit",
                 "app.models.job",
                 "app.models.wiki",

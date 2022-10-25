@@ -1,7 +1,7 @@
 from typing import List, Dict, Type
 
-from app.models.cmdb import HostGroup, Host
-from app.schemas.cmdb import AssociateHostGroupReq, GetDbSchemaReq, DbExecuteSqlReq, GetDbColumnReq, GetDbTableReq
+from app.models.basis import HostGroup, Host
+from app.schemas.basis import AssociateHostGroupReq, GetDbSchemaReq, DbExecuteSqlReq, GetDbColumnReq, GetDbTableReq
 from app.schemas.model_creator import HostGroupModel
 from app.services.children import ChildService
 from tortoise.contrib.pydantic import PydanticModel
@@ -37,7 +37,7 @@ class HostGroupService(object):
     @staticmethod
     async def get_children_data() -> List:
         host_group_obj_qs = await HostGroup.all()
-        data = await ChildService.get_children_data(host_group_obj_qs, HostGroupModel)
+        data = await ChildService.get_children_data(host_group_obj_qs, HostGroupModel)  # type: ignore
         return data
 
     @staticmethod
@@ -48,7 +48,7 @@ class HostGroupService(object):
             result = ret.dict()
             children_list = []
             for children in childrens:
-                ret = await _get_children_data(children, model_pydantic)
+                ret = await _get_children_data(children, model_pydantic)  # type: ignore
                 children_list.append(ret)
             host_obj_qs = await obj.hosts.all()  # type: ignore
             hosts_data = []
@@ -60,13 +60,13 @@ class HostGroupService(object):
                 }
                 hosts_data.append(item)
             if hosts_data and children_list == []:
-                children_list = hosts_data
+                children_list = hosts_data  # type: ignore
             result["children"] = children_list
             return result
 
         host_group_obj_qs = await HostGroup.all()
         data = await ChildService.get_children_data(
-            host_group_obj_qs, HostGroupModel, children_handler=_get_children_data
+            host_group_obj_qs, HostGroupModel, children_handler=_get_children_data  # type: ignore
         )
         return data
 
