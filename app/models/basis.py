@@ -332,8 +332,7 @@ class EnvironmentGroup(BasicModel):
         "models.DeployConfig", db_constraint=False, related_name="k8s_groups", description="k8s配置", null=True
     )
     registry_config: fields.ForeignKeyRelation["DeployConfig"] = fields.ForeignKeyField(
-        "models.DeployConfig", db_constraint=False, related_name="registry_groups", description="镜像仓库配置",
-        null=True
+        "models.DeployConfig", db_constraint=False, related_name="registry_groups", description="镜像仓库配置", null=True
     )
     hosts: fields.ManyToManyRelation["Host"] = fields.ManyToManyField(
         "models.Host",
